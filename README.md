@@ -72,14 +72,6 @@ ros2 topic hz /scan
 ros2 topic echo /scan --once
 ```
 
-## Service
-
-```bash
-ros2 service call /start_scan std_srvs/srv/Empty {}
-ros2 service call /stop_scan std_srvs/srv/Empty {}
-```
-
-Lưu ý: vì LiDAR hiện có vẻ TX-only, `start_scan/stop_scan` chỉ bật/tắt logic đọc dữ liệu trong node, không gửi lệnh xuống LiDAR như YDLidar thật.
 
 ## Tham số chính
 
