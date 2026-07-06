@@ -19,9 +19,10 @@ custom_lidar_ros2_driver     # ROS2 wrapper: publish sensor_msgs/LaserScan ra /s
 LiDAR T  -> RX USB-TTL
 LiDAR G  -> GND USB-TTL
 LiDAR U  -> 5V ổn định
+LiDAR +  -> 5V
+LiDAR -  -> GND
 ```
 
-Motor LiDAR vẫn điều khiển riêng bằng L298N/Arduino.
 
 ## Build
 
