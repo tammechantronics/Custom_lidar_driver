@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>custom_lidar_ros2_driver</name>
+  <version>0.1.0</version>
+  <description>ROS2 wrapper for custom AA/AD LiDAR SDK.</description>
+  <maintainer email="tam@example.com">tam</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_srvs</depend>
+  <depend>custom_lidar_sdk</depend>
+
+  <exec_depend>tf2_ros</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

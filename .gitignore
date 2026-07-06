@@ -1,0 +1,23 @@
+# ROS2 build outputs
+build/
+install/
+log/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# System files
+.DS_Store
+
+# Large compressed files
+*.zip
+*.tar.gz
+*.bag
+*.db3
+
+# Colcon metadata
+.colcon/

@@ -1,0 +1,21 @@
+custom_lidar_ros2_driver:
+  ros__parameters:
+    port: /dev/ttyUSB0
+    baudrate: 115200
+    frame_id: laser_frame
+    scan_topic: /scan
+
+    range_min: 0.05
+    range_max: 8.0
+
+    # LiDAR của bạn: 16 sector/vòng × 16 khoảng = 256 tia.
+    scan_size: 256
+
+    angle_offset_deg: 0.0
+    invert_angle: false
+
+    # Dựa trên /scan ~6.25 Hz khi rpm_raw ~0x96=150 => rpm ~= 375.
+    rpm_factor: 2.5
+    sector_angle_deg: 22.5
+
+    auto_start: true
