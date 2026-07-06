@@ -28,9 +28,9 @@ Motor LiDAR vẫn điều khiển riêng bằng L298N/Arduino.
 Copy 2 package vào workspace ROS2 của bạn:
 
 ```bash
-cd ~/jetbot_ros2_hust/src
+cd ~/your_ws/src
 # copy custom_lidar_sdk và custom_lidar_ros2_driver vào đây
-cd ~/jetbot_ros2_hust
+cd ~/your_ws
 colcon build --symlink-install --packages-select custom_lidar_sdk custom_lidar_ros2_driver
 source install/setup.bash
 ```
