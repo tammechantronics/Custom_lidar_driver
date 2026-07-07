@@ -172,33 +172,8 @@ Khi đó workspace đúng phải có dạng:
     └── Custom_lidar_driver/
 ```
 
-### 4.2. Lưu ý trước khi build
 
-Trong package `custom_lidar_ros2_driver`, nếu chưa có thư mục `rviz`, hãy tạo thư mục rỗng để tránh lỗi install:
-
-```bash
-mkdir -p ~/custom_lidar_ws/src/custom_lidar_ros2_driver/rviz
-```
-
-Hoặc sửa file:
-
-```bash
-~/custom_lidar_ws/src/custom_lidar_ros2_driver/CMakeLists.txt
-```
-
-Tìm dòng:
-
-```cmake
-install(DIRECTORY launch params rviz DESTINATION share/${PROJECT_NAME})
-```
-
-Sửa thành:
-
-```cmake
-install(DIRECTORY launch params DESTINATION share/${PROJECT_NAME})
-```
-
-### 4.3. Build package
+### 4.2. Build package
 
 ```bash
 cd ~/custom_lidar_ws
@@ -471,51 +446,17 @@ ros2 run tf2_ros static_transform_publisher \
 
 ---
 
-## 10. Tích hợp với robot / JetBot ROS2
 
-Khi chỉ test LiDAR độc lập, có thể dùng:
 
-```text
-world → laser_frame
-```
+## 10. Topic và service
 
-Khi gắn lên robot, không nên để `world` nối trực tiếp với `laser_frame`. Thay vào đó, LiDAR cần nằm trong cây TF của robot:
-
-```text
-map
- └── odom
-     └── base_link
-         └── laser_frame
-```
-
-Ví dụ nếu LiDAR đặt phía trước tâm robot 10 cm:
-
-```bash
-ros2 run tf2_ros static_transform_publisher \
-  0.10 0.0 0.15 0 0 0 base_link laser_frame
-```
-
-Trong đó:
-
-```text
-x = 0.10 m   LiDAR ở phía trước robot
-y = 0.00 m   Không lệch trái/phải
-z = 0.15 m   Cao hơn mặt đất 15 cm
-```
-
-Nếu robot đã có URDF, nên khai báo `laser_frame` trong URDF thay vì dùng static transform thủ công.
-
----
-
-## 11. Topic và service
-
-### 11.1. Topic publish
+### 10.1. Topic publish
 
 | Topic   | Kiểu dữ liệu                | Mô tả                 |
 | ------- | --------------------------- | --------------------- |
 | `/scan` | `sensor_msgs/msg/LaserScan` | Dữ liệu quét laser 2D |
 
-### 11.2. Service
+### 10.2. Service
 
 | Service       | Kiểu dữ liệu         | Chức năng              |
 | ------------- | -------------------- | ---------------------- |
@@ -536,7 +477,7 @@ ros2 service call /start_scan std_srvs/srv/Empty
 
 ---
 
-## 12. Protocol dữ liệu LiDAR
+## 11. Protocol dữ liệu LiDAR
 
 Driver hiện xử lý frame có dạng tổng quát:
 
@@ -570,40 +511,12 @@ readFrame()
 
 ---
 
-## 13. Sử dụng với SLAM
+## 12. Sử dụng với SLAM
 
 Sau khi `/scan` đã hiển thị ổn định trong RViz2, có thể dùng cho SLAM.
 
-### 13.1. Cài slam_toolbox
 
-```bash
-sudo apt install -y ros-humble-slam-toolbox
-```
-
-### 13.2. Chạy LiDAR driver
-
-```bash
-cd ~/custom_lidar_ws
-source install/setup.bash
-ros2 launch custom_lidar_ros2_driver lidar.launch.py
-```
-
-### 13.3. Chạy slam_toolbox online async
-
-```bash
-ros2 launch slam_toolbox online_async_launch.py \
-  scan_topic:=/scan
-```
-
-Nếu robot chưa có odometry hoặc TF đầy đủ, SLAM có thể báo lỗi TF. Khi đó cần đảm bảo cây TF tối thiểu có:
-
-```text
-odom → base_link → laser_frame
-```
-
----
-
-## 14. Lỗi thường gặp và cách xử lý
+## 13. Lỗi thường gặp và cách xử lý
 
 ### Lỗi 1: Không mở được cổng `/dev/ttyUSB0`
 
@@ -660,7 +573,10 @@ Kiểm tra Fixed Frame trong RViz:
 ```text
 Fixed Frame: world
 ```
-
+Có thể thử đổi phần Reliability Policy trong phần Topic của LaserScan thành System Default:
+```text
+Reliability Policy: System Default
+```
 Nếu test độc lập, chạy:
 
 ```bash
@@ -793,59 +709,9 @@ Bước 10: Tích hợp vào robot hoặc SLAM
 
 ---
 
-## 16. Các lệnh thường dùng
 
-Build lại toàn bộ:
 
-```bash
-cd ~/custom_lidar_ws
-rm -rf build install log
-colcon build --symlink-install
-source install/setup.bash
-```
-
-Chạy driver:
-
-```bash
-ros2 launch custom_lidar_ros2_driver lidar.launch.py
-```
-
-Chạy test RViz độc lập:
-
-```bash
-ros2 launch custom_lidar_ros2_driver test_view.launch.py
-rviz2
-```
-
-Kiểm tra topic:
-
-```bash
-ros2 topic list
-ros2 topic hz /scan
-ros2 topic echo /scan --once
-```
-
-Dừng scan:
-
-```bash
-ros2 service call /stop_scan std_srvs/srv/Empty
-```
-
-Bật lại scan:
-
-```bash
-ros2 service call /start_scan std_srvs/srv/Empty
-```
-
-Kiểm tra TF:
-
-```bash
-ros2 run tf2_ros tf2_echo world laser_frame
-```
-
----
-
-## 17. Ghi chú phát triển
+## 16. Ghi chú phát triển
 
 Các phần có thể phát triển tiếp:
 
