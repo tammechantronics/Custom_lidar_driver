@@ -1,4 +1,4 @@
-# HƯỚNG DẪN KẾT NỐI, ĐỌC VÀ GIẢI MÃ DỮ LIỆU LiDAR
+# QÚA TRÌNH TÌM HIỂU VÀ PHAN TÍCH DỮ LIỆU CỦA LIDAR
 
 ## 1. Giới thiệu
 
@@ -49,27 +49,14 @@ Tài liệu tham khảo:
 https://makerspet.com/product/3irobotix-delta-2a-lidar-distance-sensor-used-refurb/
 ```
 
-## 3. Thông số truyền UART
-
-Thông số UART xác định được trong quá trình thử nghiệm:
-
-```text
-Baud rate: 115200 bit/s
-Data bits: 8
-Parity: None
-Stop bits: 1
-Flow control: None
-```
-
-
-## 4. Đọc dữ liệu trên máy tính bằng Python
+## 3. Đọc dữ liệu trên máy tính bằng Python
 
 Cài đặt thư viện `pyserial`:
 
 ```bash
 pip install pyserial
 ```
-
+Do khi sử dụng code theo một hướng dẫn trên youtube không thể đo được dữ liệu nên tôi nghĩ ra có thể là do cấu trúc dữ liệu của hai cảm biến khác nhau vì vậy cần phải đọc được dữ liệu của LiDAR để phân tích được cấu trúc chúng.
 Chương trình đọc và hiển thị dữ liệu dưới dạng HEX:
 
 ```python
@@ -124,7 +111,7 @@ if __name__ == "__main__":
 ```
 
 
-## 5. Dữ liệu UART quan sát được
+## 4. Dữ liệu UART quan sát được
 
 Luồng dữ liệu có các frame bắt đầu bằng byte:
 
@@ -178,7 +165,7 @@ Do đó, tổng chiều dài frame được xác định bằng:
 > **Lưu ý:** Phần phân tích cấu trúc này dựa vào việc AI đọc chuỗi dữ liệu được gửi từ cảm biến và phân tích ra cấu trúc.
 ---
 
-## 6. Cấu trúc frame dữ liệu AD
+## 5. Cấu trúc frame dữ liệu AD
 
 Cấu trúc payload 56 byte được suy luận như sau:
 
@@ -203,10 +190,10 @@ Tổng cộng:
 ```text
 1 + 2 + 2 + 51 = 56 byte
 ```
-
+> **Lưu ý:** Qua nhiều lần đọc dữ liệu từ cảm biến, nhận thấy số điểm trong 1 frame có sự thay đổi do tốc độ quay của cảm biến nên 17 điểm phân tích ở trên chỉ là phần phân tích lần dữ liệu chỉ chứa 17 điểm, Cảm biến nếu quay chậm hơn thì có thể quét được nhiều điểm hơn trong 1 frame.
 ---
 
-## 7. Giải mã tốc độ quay
+## 6. Giải mã tốc độ quay
 
 Giá trị RPM raw nằm tại byte đầu tiên của payload.
 
@@ -243,9 +230,9 @@ Sự khác nhau giữa hai kết quả có thể xuất phát từ:
 
 ---
 
-## 8. Giải mã góc
+## 7. Giải mã góc
 
-### 8.1. Góc bắt đầu
+### 7.1. Góc bắt đầu
 
 Hai byte `start angle` được đọc theo thứ tự big-endian và chia cho 100:
 
@@ -263,8 +250,7 @@ Start angle = 27000 / 100
             = 270.00°
 ```
 
-### 8.2. Angle offset
-
+### 7.2. Angle offset
 Hai byte angle offset được đọc dưới dạng số nguyên có dấu:
 
 ```text
@@ -286,7 +272,7 @@ Angle offset = -32 / 100
              = -0.32°
 ```
 
-### 8.3. Phân bố góc của các điểm đo
+### 7.3. Phân bố góc của các điểm đo
 
 Qua quan sát, một vòng quét có khoảng 16 frame và góc bắt đầu giữa hai frame liên tiếp thay đổi khoảng:
 
@@ -323,7 +309,7 @@ angle = angle % 360.0
 
 ---
 
-## 9. Giải mã điểm đo
+## 8. Giải mã điểm đo
 
 Mỗi điểm đo chiếm 3 byte. Cấu trúc tạm thời được suy luận:
 
@@ -386,7 +372,7 @@ và khoảng cách nằm trong phạm vi làm việc dự kiến của LiDAR:
 ---
 
 
-## 14. Chương trình Python tách và giải mã frame
+## 9. Chương trình Python tách và giải mã frame
 
 ```python
 import serial
@@ -581,7 +567,7 @@ def parse_measurement_frame(frame: bytes):
         distance_mm = distance_raw * 0.25
 
         # Góc của từng điểm
-        angle_deg = start_angle + i * angle_step
+        angle_deg = start_angle + offset_angle + i * angle_step
 
         if angle_deg >= 360.0:
             angle_deg -= 360.0
@@ -747,7 +733,7 @@ if __name__ == "__main__":
 
 
 
-## 9. Những nội dung cần tiếp tục kiểm chứng
+## 10. Những nội dung cần tiếp tục kiểm chứng
 
 Do không có tài liệu giao thức chính thức, các nội dung sau cần được kiểm tra thêm:
 
@@ -769,7 +755,7 @@ Sau đó so sánh giá trị raw với khoảng cách thực để xây dựng h
 
 ---
 
-## 20. Kết luận
+## 11. Kết luận
 
 Quá trình nghiên cứu cho thấy có thể đọc và giải mã dữ liệu từ LiDAR ngay cả khi không có tài liệu giao thức chính thức. Phương pháp thực hiện dựa trên việc thu dữ liệu UART thô, quan sát sự lặp lại của frame, sau đó đối chiếu các trường dữ liệu.
 
