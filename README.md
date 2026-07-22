@@ -133,50 +133,16 @@ source ~/.bashrc
 
 ### 4.1. Tạo workspace ROS2
 
-```bash
-mkdir -p ~/custom_lidar_ws/src
-cd ~/custom_lidar_ws/src
-```
-
 Clone project:
 
 ```bash
 git clone https://github.com/tammechantronics/Custom_lidar_driver.git
 ```
 
-Sau khi clone, cấu trúc sẽ là:
-
-```text
-~/custom_lidar_ws/src/Custom_lidar_driver/
-├── src/
-│   ├── custom_lidar_sdk/
-│   └── custom_lidar_ros2_driver/
-└── README.md
-```
-
-Vì bên trong repo đã có thư mục `src/`, cần copy hoặc symlink 2 package con ra trực tiếp trong workspace:
-
-```bash
-cd ~/custom_lidar_ws/src
-cp -r Custom_lidar_driver/src/custom_lidar_sdk .
-cp -r Custom_lidar_driver/src/custom_lidar_ros2_driver .
-```
-
-Khi đó workspace đúng phải có dạng:
-
-```text
-~/custom_lidar_ws/
-└── src/
-    ├── custom_lidar_sdk/
-    ├── custom_lidar_ros2_driver/
-    └── Custom_lidar_driver/
-```
-
-
 ### 4.2. Build package
 
 ```bash
-cd ~/custom_lidar_ws
+cd ~/Custom_lidar_driver
 colcon build --symlink-install --packages-select custom_lidar_sdk custom_lidar_ros2_driver
 ```
 
