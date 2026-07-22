@@ -282,7 +282,7 @@ invert_angle: true
 ### 7.1. Chạy bằng launch file
 
 ```bash
-cd ~/custom_lidar_ws
+cd ~/Custom_lidar_driver
 source install/setup.bash
 ros2 launch custom_lidar_ros2_driver lidar.launch.py
 ```
@@ -313,7 +313,7 @@ Cách này phù hợp khi cần đổi nhanh tham số mà không sửa file `li
 Mở terminal mới:
 
 ```bash
-cd ~/custom_lidar_ws
+cd ~/custom_lidar_driver
 source install/setup.bash
 ```
 
@@ -362,7 +362,7 @@ Type: sensor_msgs/msg/LaserScan
 ### 9.1. Chạy launch test RViz độc lập
 
 ```bash
-cd ~/custom_lidar_ws
+cd ~/custom_lidar_driver
 source install/setup.bash
 ros2 launch custom_lidar_ros2_driver test_view.launch.py
 ```
