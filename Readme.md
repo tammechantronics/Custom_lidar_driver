@@ -48,6 +48,10 @@ Tài liệu tham khảo:
 ```text
 https://makerspet.com/product/3irobotix-delta-2a-lidar-distance-sensor-used-refurb/
 ```
+```text
+https://chatgpt.com/share/6a60baa4-1e0c-83ec-a938-080136f819ce
+```
+
 
 ## 3. Đọc dữ liệu trên máy tính bằng Python
 
